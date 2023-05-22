@@ -34,7 +34,9 @@ pip install -r requirements.txt
 ```
 
 ## Запуск веб-сервера uvicorn
+
 Запустите веб-сервер uvicorn с помощью команды:
+
 ```bash
 uvicorn main:app --reload
 ```

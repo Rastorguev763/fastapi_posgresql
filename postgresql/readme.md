@@ -4,7 +4,7 @@
 
 ## Шаг 1: Установка Docker
 
-1. Перейдите на официальный сайт Docker (https://www.docker.com/) и скачайте установочный файл Docker Desktop для Windows.
+1. Перейдите на официальный сайт Docker (<https://www.docker.com/>) и скачайте установочный файл Docker Desktop для Windows.
 2. Запустите установщик и следуйте инструкциям на экране для установки Docker.
 3. После завершения установки запустите Docker Desktop.
 
@@ -34,6 +34,7 @@ services:
     ports:
       - 5432:5432
 ```
+
 `version: '3'`: Указывает версию синтаксиса Docker Compose, которую мы используем. В данном случае, это версия 3.
 
 `services`: Определяет список сервисов, которые будут запущены с помощью Docker Compose.
@@ -70,11 +71,14 @@ services:
 CONTAINER ID   IMAGE      COMMAND                  CREATED         STATUS         PORTS                    NAMES
 04ff43fe51f3   postgres   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:5432->5432/tcp   docker-db-1
 ```
+
 3. Если контейнер автоматически не запустился можно проверить командой `docker ps -a` создался контейнер.
+
 ```bash
 CONTAINER ID   IMAGE      COMMAND                  CREATED          STATUS                          PORTS     NAMES
 04ff43fe51f3   postgres   "docker-entrypoint.s…"   26 minutes ago   Exited (0) About a minute ago             docker-db-1
 ```
+
 Для запуска используйте команду `docker start -i <имя контейнера или его ID>`
 
 Так же проверить корректность установки, запуск, управление контейнером можно в Docker Desktop.
