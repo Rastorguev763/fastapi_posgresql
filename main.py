@@ -66,6 +66,7 @@ def get_questions(session, num_question):
 
     print(f'ВСЕГО ДОБАВЛЕНО {len(questions)} НОВЫХ ВОПРОСОВ')
     session.close()
+    
     return questions
 
 @app.get("/questions")
