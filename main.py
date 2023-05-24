@@ -33,7 +33,6 @@ db_name = 'postgres'
 
 # Формируем строку подключения
 db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
-
 engine = create_engine(db_url)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
