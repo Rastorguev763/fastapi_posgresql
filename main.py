@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 import requests, time
-# from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, desc
 from sqlalchemy.ext.declarative import declarative_base
@@ -19,13 +18,25 @@ class Question(Base):
     answer_text = Column(String)
     created_date = Column(DateTime, default=datetime.now)
 
-engine = create_engine('sqlite:///questions.sqlite')
+# создание sqlite 
+# engine = create_engine('sqlite:///questions.sqlite')
+# Base.metadata.create_all(bind=engine)
+# Session = sessionmaker(bind=engine)
+
+# Подключение и создание таблицы в PosgreSQL
+# Замените значения на свои соответствующие параметры которые задавали при создания PostgreSQL
+db_user = 'root'
+db_password = 'root'
+db_host = '127.0.0.1'
+db_port = '5432'
+db_name = 'postgres'
+
+# Формируем строку подключения
+db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+
+engine = create_engine(db_url)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
-
-# Модель данных для входного запроса
-# class QuestionRequest(BaseModel):
-#     questions_num: int
 
 # POST метод для получения вопросов
 @app.post("/questions")
@@ -76,3 +87,6 @@ def get_all_questions(num_question: int):
     session.close()
     get_questions(session, num_question)
     return questions
+
+# для запуска сервера используйте команду
+# uvicorn main:app --reload
