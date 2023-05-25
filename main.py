@@ -30,9 +30,14 @@ db_password = 'root'
 db_host = '127.0.0.1'
 db_port = '5432'
 db_name = 'postgres'
+container_name = 'postgres_questions'
 
 # Формируем строку подключения
-db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+# запуск с локальной машины
+# db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+
+# запуск с контейнера
+db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
 engine = create_engine(db_url)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)

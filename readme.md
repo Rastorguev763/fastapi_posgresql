@@ -33,6 +33,23 @@
 pip install -r requirements.txt
 ```
 
+## Подключения базы данных
+
+В этом проекте используются предусмотрено использование базы данных SQL:
+
+- **PostgreSQL**: [инструкция](<https://github.com/Rastorguev763/fastapi_posgresql/blob/c75ab9e2fe255248a500a1db6b44a8520375dd97/postgresql/readme.md>)  по развертки базы
+
+или
+
+- **Sqlite**: используйте этот код
+
+```python
+# создание sqlite 
+engine = create_engine('sqlite:///questions.sqlite')
+Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
+```
+
 ## Запуск веб-сервера uvicorn
 
 Запустите веб-сервер uvicorn с помощью команды:
@@ -41,10 +58,42 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-`main:app` указывает, что файл main.py содержит приложение FastAPI и его экземпляр называется app.
+- `main:app` указывает, что файл main.py содержит приложение FastAPI и его экземпляр называется app.
 
-Флаг `--reload` позволяет автоматически перезапускать сервер при изменениях в коде (полезно во время разработки).
+- Флаг `--reload` позволяет автоматически перезапускать сервер при изменениях в коде (полезно во время разработки).
 
-После запуска uvicorn, FastAPI веб-сервис будет доступен <http://localhost:8000/>
+После запуска uvicorn, FastAPI веб-сервис будет доступен <http://127.0.0.1:8000/>
 
-Для отправки запроса <<http://127.0.0.1:8000/questions?num_question=>`<КОЛИЧЕСТВО ВОПРОСОВ КОТОРЫЕ НУЖНО ПОЛУЧИТЬ>`
+## Создание и запуск в Docker
+
+- Установите Docker по [инструкции](<https://github.com/Rastorguev763/fastapi_posgresql/blob/c75ab9e2fe255248a500a1db6b44a8520375dd97/postgresql/readme.md>)
+
+- Клонируйте репозиторий
+- Откройте терминал в текущей папке
+- Запустите команду
+
+```bash
+docker-compose up -d
+```
+
+После сборки и установки всех зависимостей, для отправки запроса используйте команду
+
+```GET
+<http://127.0.0.1:8000/questions?num_question=>`<КОЛИЧЕСТВО ВОПРОСОВ КОТОРЫЕ НУЖНО ПОЛУЧИТЬ>
+```
+
+## Обратите внимание, проект настроен для запуска в Docker с помощью Docker Compose
+
+- Подключение вэб приложения к базе PostgreSQL с локальной машины
+
+```python
+# запуск с локальной машины
+db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+```
+
+- Подключение вэб приложения запущенного в контейнере к базе PostgreSQL
+
+```python
+# запуск с контейнера
+db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
+```
