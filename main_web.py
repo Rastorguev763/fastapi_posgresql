@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 import requests, time
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -18,7 +19,7 @@ class Question(Base):
     answer_text = Column(String)
     created_date = Column(DateTime, default=datetime.now)
 
-# создание sqlite 
+# # создание sqlite 
 # engine = create_engine('sqlite:///questions.sqlite')
 # Base.metadata.create_all(bind=engine)
 # Session = sessionmaker(bind=engine)
@@ -42,8 +43,13 @@ engine = create_engine(db_url)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 
-# для получения вопросов
-def get_questions(session, num_question):
+# POST метод для получения вопросов
+@app.post("/questions")
+def get_questions(data = Body()):
+    question_last_add = sqlalchemy_to_json(get_all_questions())
+    session = Session()
+    num_question = int(data['num_questions'])
+    # print(type(num_question))
     questions = []
     while len(questions) < num_question:
         
@@ -79,17 +85,32 @@ def get_questions(session, num_question):
         print(f'ВСЕГО ДОБАВЛЕНО {len(questions)} ВОПРОСОВ, ПОСЛЕДНИЙ ДОБАВЛЕННЫЙ №_{id_question}')
 
     print(f'ВСЕГО ДОБАВЛЕНО {len(questions)} НОВЫХ ВОПРОСОВ')
-    session.close()
-    
-    return questions
 
-@app.get("/questions")
-def get_all_questions(num_question: int):
+    session.close()
+    # print(type(question_last_add))
+    return {"message": f"'ПОСЛЕДНИЙ ВОПРОС ЗАПИСАННЫЙ В ПРЕДЫДУЩЕМ ЗАПРОСЕ' - {question_last_add}"}
+
+def get_all_questions():
+    
     session = Session()
     questions = session.query(Question).order_by(desc(Question.id)).first()
     session.close()
-    get_questions(session, num_question)
     return questions
 
+def sqlalchemy_to_json(my_object):
+    # Преобразуем объект в словарь
+    my_dict = my_object.__dict__
+
+    # Удаляем некоторые ключи, которые не нужны
+    keys_to_remove = ['_sa_instance_state', 'created_date']
+    for key in keys_to_remove:
+        my_dict.pop(key, None)
+
+    return my_dict
+
+@app.get("/")
+def root():
+    return FileResponse("public/main.html")
+
 # для запуска сервера используйте команду
-# uvicorn main:app --reload
+# uvicorn main_web:app --reload

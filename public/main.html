@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RASTORGUEV</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div id="message"></div>
+    <!-- <p>
+        Введите имя: <br /> 
+        <input name="username" id="username" />
+    </p> -->
+    <p>
+        Введите количество вопросов которые хотите получить: <br />
+        <input name="num" id="number_question" type="number" />
+    </p>
+    <button onclick="send()" id="send-button">Отправить</button>
+    <script>
+        async function send() {
+
+            // Получаем кнопку
+            const button = document.getElementById("send-button");
+            // Блокируем кнопку
+            button.disabled = true;
+
+            // получаем введеное в поле имя и возраст
+            // const username = document.getElementById("username").value;
+            const num_question = document.getElementById("number_question").value;
+
+            // отправляем запрос
+            const response = await fetch("/questions", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    // name: username,
+                    num_questions: num_question
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("message").textContent = data.message;
+
+                // Разблокируем кнопку
+                button.disabled = false;
+            } else {
+                console.log(response);
+                // Разблокируем кнопку в случае ошибки
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>
