@@ -46,7 +46,10 @@ Session = sessionmaker(bind=engine)
 # POST метод для получения вопросов
 @app.post("/questions")
 def get_questions(data = Body()):
-    question_last_add = sqlalchemy_to_json(get_all_questions())
+    try:
+        question_last_add = sqlalchemy_to_json(get_all_questions())
+    except:
+        question_last_add = {}
     session = Session()
     num_question = int(data['num_questions'])
     # print(type(num_question))
